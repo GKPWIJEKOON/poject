@@ -146,6 +146,10 @@ const LearningPlan = () => {
     }
   };
 
+
+
+
+
   const handleUpdateTopic = async (values) => {
     try {
       await dispatch(updateTopic({
@@ -199,6 +203,9 @@ const LearningPlan = () => {
       message.error(err.message || 'Failed to add resource');
     }
   };
+
+
+  
 
   const handleUpdateResource = async (values) => {
     try {
