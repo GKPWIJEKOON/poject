@@ -88,11 +88,5 @@ public class LearningPlan {
         this.user = user;
     }
 
-    public List<Topic> getTopics() {
-        return topics;
-    }
 
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
-    }
 }
