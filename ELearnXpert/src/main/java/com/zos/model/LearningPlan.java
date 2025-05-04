@@ -95,7 +95,4 @@ public class LearningPlan {
         this.topics = topics;
     }
 
-    
-
-
 }
