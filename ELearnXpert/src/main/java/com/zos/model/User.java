@@ -58,8 +58,6 @@ public class User {
     public User() {
         // TODO Auto-generated constructor stub
     }
-
-
     public User(Integer id, String username, String email, String name, String mobile, String website, String bio,
                 String gender, String image, String password, Set<UserDto> follower, Set<UserDto> following,
                 List<Story> stories, List<Post> savedPost) {
