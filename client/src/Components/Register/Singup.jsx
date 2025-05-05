@@ -1,6 +1,5 @@
 import { Formik, Form, Field } from "formik";
 import {
-  Box,
   Button,
   FormControl,
   FormErrorMessage,
@@ -10,96 +9,85 @@ import {
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { signupAction } from "../../Redux/Auth/Action";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email address").required("Required"),
-  username: Yup.string()
-    .min(4, "Username must be at least 4 characters")
-    .required("Required"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Required"),
-  name: Yup.string()
-    .min(2, "Name must be at least 2 characters")
-    .required("Required"),
+  username: Yup.string().min(4).required("Required"),
+  password: Yup.string().min(8).required("Required"),
+  name: Yup.string().min(2).required("Required"),
 });
 
 const Signup = () => {
-  const initialValues = { email: "", username: "", password: "", name:"" };
-  const dispatch=useDispatch();
-  const {auth}=useSelector(store=>store);
-const navigate=useNavigate();
-const toast = useToast();
-console.log("auth :-",auth.signup?.username)
+  const initialValues = { email: "", username: "", password: "", name: "" };
+  const dispatch = useDispatch();
+  const { auth } = useSelector((store) => store);
+  const navigate = useNavigate();
+  const toast = useToast();
 
-  const handleSubmit = (values,actions) => {
-    dispatch(signupAction(values))
-    console.log("signup",values);
+  const handleSubmit = (values, actions) => {
+    dispatch(signupAction(values));
     actions.setSubmitting(false);
   };
 
-  useEffect(()=>{
-if(auth.signup?.username){
-  
-  navigate("/login")
-  toast({
-    title: 'Account created successfully',
-    status: 'success',
-    duration: 8000,
-    isClosable: true,
-  })
-}
-  },[auth.signup])
+  useEffect(() => {
+    if (auth.signup?.username) {
+      navigate("/login");
+      toast({
+        title: "Account created successfully",
+        status: "success",
+        duration: 8000,
+        isClosable: true,
+      });
+    }
+  }, [auth.signup]);
 
   return (
-    <div>
-        <div className="border border-slate-300 ">
-      <Box p={8} display="flex" flexDirection="column" alignItems="center">
-        <img
-          className="border border-red-800"
-          src="https://www.e-learning-platform.org/images/e-learning-logo.png"
-          alt=""
-        />
-        <p className="font-bold opacity-50 text-lg mb-10 text-center">
-          Experience the delightful learning experience with ELearnXpert.
-        </p>
+    <main className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#0a2540] via-[#143d6d] to-[#1e5799] p-4">
+      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src="https://www.e-learning-platform.org/images/e-learning-logo.png"
+            alt="logo"
+            className="h-16"
+          />
+          <p className="font-semibold text-sm text-center mt-4 text-blue-800">
+            Experience the delightful learning experience with ELearnXpert.
+          </p>
+        </div>
+
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           {(formikProps) => (
-            <Form className="w-full">
+            <Form>
               <Field name="email">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.email && form.touched.email}
                     mb={4}
                   >
-                    <Input
-                      className="w-full"
-                      {...field}
-                      id="email"
-                      placeholder="Mobile Number Or Email"
-                    />
+                    <Input {...field} id="email" placeholder="Email" />
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
+
               <Field name="username">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.username && form.touched.username}
                     mb={4}
                   >
-                    <Input {...field} id="username" placeholder="username" />
+                    <Input {...field} id="username" placeholder="Username" />
                     <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
+
               <Field name="name">
                 {({ field, form }) => (
                   <FormControl
@@ -111,6 +99,7 @@ if(auth.signup?.username){
                   </FormControl>
                 )}
               </Field>
+
               <Field name="password">
                 {({ field, form }) => (
                   <FormControl
@@ -127,16 +116,17 @@ if(auth.signup?.username){
                   </FormControl>
                 )}
               </Field>
-              <p className="text-center">
-              
+
+              <p className="text-xs text-center mt-2 text-gray-600">
+                By signing up, you agree to our{" "}
+                <span className="text-blue-600 underline">Terms</span>,{" "}
+                <span className="text-blue-600 underline">Privacy Policy</span>, and{" "}
+                <span className="text-blue-600 underline">Cookies Policy</span>.
               </p>
-              <p className="mt-5 text-center">
-                By signing up, you agree to our Terms , Privacy Policy and
-                Cookies Policy .
-              </p>
+
               <Button
                 className="w-full"
-                mt={4}
+                mt={6}
                 colorScheme="blue"
                 type="submit"
                 isLoading={formikProps.isSubmitting}
@@ -146,13 +136,18 @@ if(auth.signup?.username){
             </Form>
           )}
         </Formik>
-      </Box>
-    </div>
-    <div className="w-full border border-slate-300 mt-5">
-       <p className="text-center py-2">If You Have Already Account <span onClick={()=>navigate("/login")} className="ml-2 text-blue-700 cursor-pointer">Sign In</span></p>
-    </div>
-    </div>
-  
+
+        <p className="text-center text-sm mt-4 text-gray-700">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-blue-600 cursor-pointer underline"
+          >
+            Sign In
+          </span>
+        </p>
+      </div>
+    </main>
   );
 };
 
