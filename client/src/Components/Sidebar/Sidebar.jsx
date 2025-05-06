@@ -8,7 +8,6 @@ import SearchComponent from "../SearchComponent/SearchComponent";
 import { useSelector } from "react-redux";
 import CreatePostModal from "../Post/Create/CreatePostModal";
 import CreateReelModal from "../Create/CreateReel";
-import Notification from "../Notification/Notification";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -81,21 +80,21 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sticky top-0 h-screen pb-10 flex bg-blue-900 text-white font-bold text-lg">
+    <div className="sticky top-0 h-screen pb-10 flex bg-[#0A0F2C] text-white font-bold text-lg z-40">
       <div
-        className={`${
-          activeTab === "Search" ? "px-3" : "px-10"
-        } flex flex-col justify-between h-full w-full`}
+        className={`$${isSearchBoxVisible ? "px-3" : "px-6"} flex flex-col justify-between h-full w-full`}
       >
-        <div className="pt-10">
+        <div className="pt-6">
           {!isSearchBoxVisible && (
-            <img
-              className="w-40"
-              src="https://www.e-learning-platform.org/images/e-learning-logo.png"
-              alt="Logo"
-            />
+            <div className="flex justify-center mb-8">
+              <img
+                className="w-40 object-contain"
+                src="https://www.e-learning-platform.org/images/e-learning-logo.png"
+                alt="Logo"
+              />
+            </div>
           )}
-          <div className="mt-10 space-y-3">
+          <div className="space-y-3">
             {mainu.map((item) => (
               <div
                 key={item.title}
@@ -106,14 +105,16 @@ const Sidebar = () => {
                     : "hover:bg-blue-800"
                 }`}
               >
-                <div className="text-2xl">{activeTab === item.title ? item.activeIcon : item.icon}</div>
+                <div className="text-2xl">
+                  {activeTab === item.title ? item.activeIcon : item.icon}
+                </div>
                 {!isSearchBoxVisible && <p>{item.title}</p>}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="relative mb-10">
+        <div className="relative mb-6">
           <div
             onClick={handleClick}
             className="flex items-center cursor-pointer hover:bg-blue-800 p-3 rounded-xl"
@@ -141,7 +142,10 @@ const Sidebar = () => {
         </div>
       )}
 
+      {/* Create Post Modal */}
       <CreatePostModal onClose={onClose} isOpen={isOpen} onOpen={onOpen} />
+
+      {/* Create Reel Modal */}
       <CreateReelModal
         onClose={handleCloseCreateReelModal}
         isOpen={isCreateReelModalOpen}
