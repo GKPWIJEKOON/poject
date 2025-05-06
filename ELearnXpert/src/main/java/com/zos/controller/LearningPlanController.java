@@ -59,14 +59,7 @@ public class LearningPlanController {
         return new ResponseEntity<>(plan, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<List<LearningPlan>> getUserLearningPlans(
-            @RequestHeader("Authorization") String token) throws UserException {
-
-        User user = userService.findUserProfile(token);
-        List<LearningPlan> plans = learningPlanService.getLearningPlansByUserId(user.getId());
-        return new ResponseEntity<>(plans, HttpStatus.OK);
-    }
+   
 
     @DeleteMapping("/{planId}")
     public ResponseEntity<MessageResponse> deleteLearningPlan(
