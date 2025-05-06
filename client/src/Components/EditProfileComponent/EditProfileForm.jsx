@@ -95,155 +95,145 @@ const EditProfileForm = () => {
   // console.log("initial value ---- ", initialValues);
 
   return (
-    <div className="border rounded-md p-10">
-      <div className="flex pb-7">
-        <div className="w-[15%]">
-          <img
-            className="w-8 h-8 rounded-full"
-            src={
-              imageFile ||
-              user.reqUser?.image ||
-              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            }
-            alt=""
-          />
-        </div>
-
-        <div>
-          <p>{user.reqUser?.username}</p>
-          <p
-            onClick={onOpen}
-            className="font-bold text-blue-800 cursor-pointer"
-          >
-            Change Profile Photo
-          </p>
-        </div>
-      </div>
-      <form onSubmit={formik.handleSubmit}>
-        <Stack spacing="6">
-          <FormControl className="flex " id="name">
-            <FormLabel className="w-[15%]">Name</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Name"
-                className="w-full"
-                type="text"
-                {...formik.getFieldProps("name")}
-              />
-              <FormHelperText className="text-xs">
-                Help people discover your account by using the name you're known
-                by: either your full name, nickname, or business name.
-              </FormHelperText>
-              <FormHelperText className="text-xs">
-                You can only change your name twice within 14 days.
-              </FormHelperText>
-            </div>
-          </FormControl>
-          <FormControl className="flex " id="username">
-            <FormLabel className="w-[15%]">Username</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Username"
-                className="w-full"
-                type="text"
-                {...formik.getFieldProps("username")}
-              />
-              <FormHelperText className="text-xs">
-                In most cases, you'll be able to change your username back to
-                ashok.zarmariya for another 14 days. Learn more
-              </FormHelperText>
-            </div>
-          </FormControl>
-          <FormControl className="flex " id="website">
-            <FormLabel className="w-[15%]">Website</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Website"
-                className="w-full"
-                type="text"
-                {...formik.getFieldProps("website")}
-              />
-              <FormHelperText className="text-xs">
-                Please add the  bio
-              </FormHelperText>
-            </div>
-          </FormControl>
-          <FormControl className="flex " id="bio">
-            <FormLabel className="w-[15%]">Bio</FormLabel>
-            <div className="w-full">
-              <Textarea
-                placeholder="Bio"
-                className="w-full"
-                type="text"
-                {...formik.getFieldProps("bio")}
-              />
-            </div>
-          </FormControl>
-
-          <div className="py-10">
-            <p className="font-bold text-sm">Personal information</p>
-            <p className="text-xs">
-              Provide your personal information, even if the account is used for
-              a business, a pet or something else. This won't be a part of your
-              public profile.
-            </p>
-          </div>
-
-          <FormControl className="flex " id="email">
-            <FormLabel className="w-[15%]">Email address</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Email"
-                className="w-full"
-                type="email"
-                {...formik.getFieldProps("email")}
-              />
-            </div>
-          </FormControl>
-
-          <FormControl className="flex " id="mobile">
-            <FormLabel className="w-[15%]">Phone number</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Phone"
-                className="w-full"
-                type="tel"
-                {...formik.getFieldProps("mobile")}
-              />
-            </div>
-          </FormControl>
-          <FormControl className="flex " id="gender">
-            <FormLabel className="w-[15%]">Gender</FormLabel>
-            <div className="w-full">
-              <Input
-                placeholder="Gender"
-                className="w-full"
-                type="text"
-                {...formik.getFieldProps("gender")}
-              />
-            </div>
-          </FormControl>
-          {/* <FormControl className="flex " id="private">
-            <Checkbox {...formik.getFieldProps("private")}>
-              Pr className="w-full"ivate Account
-            </Checkbox>
-          </FormControl> */}
-
-          <div>
-            <Button colorScheme="blue" type="submit" className="">
-              submit
-            </Button>
-          </div>
-        </Stack>
-      </form>
-
-      <ChangeProfilePhotoModal
-        handleProfileImageChange={handleProfileImageChange}
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpen={onOpen}
+    <div className="bg-[#E6F7FF] rounded-lg p-8 shadow-md">
+  <div className="flex items-center pb-7">
+    <div className="w-[15%]">
+      <img
+        className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-sky-300"
+        src={
+          imageFile ||
+          user.reqUser?.image ||
+          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+        }
+        alt="Profile"
       />
     </div>
+
+    <div>
+      <p className="font-semibold">{user.reqUser?.username}</p>
+      <p
+        onClick={onOpen}
+        className="font-bold text-blue-700 hover:underline cursor-pointer text-sm"
+      >
+        Change Profile Photo
+      </p>
+    </div>
+  </div>
+
+  <form onSubmit={formik.handleSubmit}>
+    <Stack spacing="6">
+      <FormControl className="flex items-start" id="name">
+        <FormLabel className="w-[20%] pt-2 font-medium">Name</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Name"
+            type="text"
+            bg="white"
+            {...formik.getFieldProps("name")}
+          />
+          <FormHelperText fontSize="xs">
+            Help people discover your account by using a recognizable name.
+          </FormHelperText>
+        </div>
+      </FormControl>
+
+      <FormControl className="flex items-start" id="username">
+        <FormLabel className="w-[20%] pt-2 font-medium">Username</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Username"
+            type="text"
+            bg="white"
+            {...formik.getFieldProps("username")}
+          />
+          <FormHelperText fontSize="xs">
+            You can change your username back within 14 days.
+          </FormHelperText>
+        </div>
+      </FormControl>
+
+      <FormControl className="flex items-start" id="website">
+        <FormLabel className="w-[20%] pt-2 font-medium">Website</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Website"
+            type="text"
+            bg="white"
+            {...formik.getFieldProps("website")}
+          />
+        </div>
+      </FormControl>
+
+      <FormControl className="flex items-start" id="bio">
+        <FormLabel className="w-[20%] pt-2 font-medium">Bio</FormLabel>
+        <div className="w-full">
+          <Textarea
+            placeholder="Tell something about yourself"
+            bg="white"
+            {...formik.getFieldProps("bio")}
+          />
+        </div>
+      </FormControl>
+
+      <div className="py-6">
+        <p className="font-semibold text-sm">Personal Information</p>
+        <p className="text-xs text-gray-600">
+          This won’t be visible on your public profile.
+        </p>
+      </div>
+
+      <FormControl className="flex items-start" id="email">
+        <FormLabel className="w-[20%] pt-2 font-medium">Email</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Email"
+            type="email"
+            bg="white"
+            {...formik.getFieldProps("email")}
+          />
+        </div>
+      </FormControl>
+
+      <FormControl className="flex items-start" id="mobile">
+        <FormLabel className="w-[20%] pt-2 font-medium">Phone</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Phone"
+            type="tel"
+            bg="white"
+            {...formik.getFieldProps("mobile")}
+          />
+        </div>
+      </FormControl>
+
+      <FormControl className="flex items-start" id="gender">
+        <FormLabel className="w-[20%] pt-2 font-medium">Gender</FormLabel>
+        <div className="w-full">
+          <Input
+            placeholder="Gender"
+            type="text"
+            bg="white"
+            {...formik.getFieldProps("gender")}
+          />
+        </div>
+      </FormControl>
+
+      <div>
+        <Button colorScheme="blue" type="submit" className="w-full md:w-auto">
+          Save Changes
+        </Button>
+      </div>
+    </Stack>
+  </form>
+
+  <ChangeProfilePhotoModal
+    handleProfileImageChange={handleProfileImageChange}
+    isOpen={isOpen}
+    onClose={onClose}
+    onOpen={onOpen}
+  />
+</div>
+
   );
 };
 
