@@ -67,8 +67,6 @@ public class LearningPlanController {
         return new ResponseEntity<>(plans, HttpStatus.OK);
     }
 
-   
-
     @DeleteMapping("/{planId}")
     public ResponseEntity<MessageResponse> deleteLearningPlan(
             @PathVariable Long planId,
