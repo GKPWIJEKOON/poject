@@ -87,9 +87,31 @@ public class LearningPlanController {
         Topic createdTopic = learningPlanService.addTopicToPlan(planId, topic, user.getId());
         return new ResponseEntity<>(createdTopic, HttpStatus.CREATED);
     }
-
-
     
+    @PutMapping("/topics/{topicId}")
+    public ResponseEntity<Topic> updateTopic(
+            @PathVariable Long topicId,
+            @RequestBody Topic topic,
+            @RequestHeader("Authorization") String token) throws UserException, TopicException {
+
+        User user = userService.findUserProfile(token);
+        topic.setId(topicId);
+        Topic updatedTopic = learningPlanService.updateTopic(topicId, topic, user.getId());
+        return new ResponseEntity<>(updatedTopic, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/topics/{topicId}")
+    public ResponseEntity<MessageResponse> deleteTopic(
+            @PathVariable Long topicId,
+            @RequestHeader("Authorization") String token) throws UserException, TopicException {
+
+        User user = userService.findUserProfile(token);
+        learningPlanService.deleteTopic(topicId, user.getId());
+        return new ResponseEntity<>(new MessageResponse("Topic deleted successfully"), HttpStatus.OK);
+    }
+
+
+
 
 
     @PostMapping("/topics/{topicId}/resources")
