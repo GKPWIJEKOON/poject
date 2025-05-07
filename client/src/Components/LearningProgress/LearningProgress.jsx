@@ -130,46 +130,7 @@ const LearningProgress = () => {
         onOk={() => form.submit()}
         title={editing ? "Edit Update ✏️" : "Add Progress Update 🚀"}
       >
-        <Form form={form} onFinish={handleSubmit} layout="vertical">
-          {!editing && (
-            <Form.Item label="Choose a Template">
-              <Select
-                placeholder="Select a template"
-                onChange={handleTemplateChange}
-                optionLabelProp="label"
-              >
-                <Option value="tutorial" label="📚 Completed Tutorial">
-                  <FileTextOutlined /> 📚 Completed Tutorial
-                </Option>
-                <Option value="skill" label="🛠️ New Skill Learned">
-                  <ToolOutlined /> 🛠️ New Skill Learned
-                </Option>
-                <Option value="project" label="🚀 Built a Project">
-                  <RocketOutlined /> 🚀 Built a Project
-                </Option>
-              </Select>
-            </Form.Item>
-          )}
-
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: "Please enter a title" }]}
-          >
-            <Input placeholder="e.g., Completed React Bootcamp" />
-          </Form.Item>
-
-          <Form.Item
-            name="content"
-            label="Details"
-            rules={[{ required: true, message: "Please enter details" }]}
-          >
-            <Input.TextArea
-              rows={4}
-              placeholder="What did you learn or complete?"
-            />
-          </Form.Item>
-        </Form>
+        
       </Modal>
     </div>
   );
