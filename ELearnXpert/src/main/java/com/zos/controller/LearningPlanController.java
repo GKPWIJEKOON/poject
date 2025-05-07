@@ -87,7 +87,7 @@ public class LearningPlanController {
         Topic createdTopic = learningPlanService.addTopicToPlan(planId, topic, user.getId());
         return new ResponseEntity<>(createdTopic, HttpStatus.CREATED);
     }
-
+    
     @PutMapping("/topics/{topicId}")
     public ResponseEntity<Topic> updateTopic(
             @PathVariable Long topicId,
@@ -109,6 +109,10 @@ public class LearningPlanController {
         learningPlanService.deleteTopic(topicId, user.getId());
         return new ResponseEntity<>(new MessageResponse("Topic deleted successfully"), HttpStatus.OK);
     }
+
+
+
+
 
     @PostMapping("/topics/{topicId}/resources")
     public ResponseEntity<Resource> addResourceToTopic(
