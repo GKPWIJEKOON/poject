@@ -1,72 +1,65 @@
 import React, { useEffect, useState } from "react";
-import { BsBookmark } from "react-icons/bs";
-import { GrTable } from "react-icons/gr";
-import { RiVideoFill, RiVideoLine } from "react-icons/ri";
-import { BiBookmark, BiUserPin } from "react-icons/bi";
+import { RiVideoLine } from "react-icons/ri";
+import { BiBookmark } from "react-icons/bi";
 import { AiOutlineTable, AiOutlineUser } from "react-icons/ai";
 import ReqUserPostCard from "./ReqUserPostCard";
 import { useDispatch, useSelector } from "react-redux";
-import { reqUserPostAction, savePostAction } from "../../Redux/Post/Action";
+import { reqUserPostAction } from "../../Redux/Post/Action";
 
-
-const ProfilePostsPart = ({user}) => {
+const ProfilePostsPart = ({ user }) => {
   const [activeTab, setActiveTab] = useState("Post");
-  const { post} = useSelector((store) => store);
+  const { post } = useSelector((store) => store);
   const token = localStorage.getItem("token");
   const dispatch = useDispatch();
 
-
   const tabs = [
-    {
-      tab: "Post",
-      icon: <AiOutlineTable className="text-xs" />,
-      activeTab: "",
-    },
-    { tab: "Reels", icon: <RiVideoLine className="text-xs" />, activeTab: "" },
-    { tab: "Saved", icon: <BiBookmark className="text-xs" />, activeTab: "" },
-    {
-      tab: "Tagged",
-      icon: <AiOutlineUser className="text-xs" />,
-      activeTab: "",
-    },
+    { tab: "Post", icon: <AiOutlineTable className="text-lg" /> },
+    { tab: "Reels", icon: <RiVideoLine className="text-lg" /> },
+    { tab: "Saved", icon: <BiBookmark className="text-lg" /> },
+    { tab: "Tagged", icon: <AiOutlineUser className="text-lg" /> },
   ];
 
   useEffect(() => {
-    const data = {
-      jwt: token,
-      userId: user?.id,
-    };
-    dispatch(reqUserPostAction(data));
-  }, [user,post.createdPost]);
-
-
+    if (user?.id && token) {
+      dispatch(reqUserPostAction({ jwt: token, userId: user.id }));
+    }
+  }, [user, post.createdPost]);
 
   return (
-    <div className="">
-      <div className="flex space-x-14 border-t relative ">
+    <div className="bg-white rounded-xl shadow-md p-4">
+      {/* Tab Bar */}
+      <div className="flex justify-center space-x-10 border-t border-b py-2">
         {tabs.map((item) => (
-          <div
+          <button
+            key={item.tab}
             onClick={() => setActiveTab(item.tab)}
-            className={`${
-              item.tab === activeTab ? "border-t border-black" : "opacity-60"
-            } flex items-center cursor-pointer py-2 text-sm`}
+            className={`flex items-center space-x-2 text-sm font-medium px-4 py-2 rounded-t-md transition-all duration-200
+              ${activeTab === item.tab
+                ? "text-blue-600 border-b-2 border-blue-500 bg-blue-50"
+                : "text-gray-500 hover:text-blue-500 hover:bg-gray-100"
+              }`}
           >
-            <p>{item.icon}</p>
-
-            <p className="ml-1 text-xs">{item.tab} </p>
-          </div>
+            <span>{item.icon}</span>
+            <span>{item.tab}</span>
+          </button>
         ))}
       </div>
-      <div>
-        <div className="flex flex-wrap">
-          {post.reqUserPost?.length > 0 &&
-            activeTab==="Post"? post.reqUserPost?.map((item, index) => (
-              <ReqUserPostCard post={item} key={index} />
-            )):activeTab==="Saved"?user?.savedPost?.map((item, index) => (
-              <ReqUserPostCard post={item} key={index} />
-            )):
-            ""}
-        </div>
+
+      {/* Posts Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6">
+        {activeTab === "Post" && post.reqUserPost?.length > 0 ? (
+          post.reqUserPost.map((item, index) => (
+            <ReqUserPostCard key={index} post={item} />
+          ))
+        ) : activeTab === "Saved" && user?.savedPost?.length > 0 ? (
+          user.savedPost.map((item, index) => (
+            <ReqUserPostCard key={index} post={item} />
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500 mt-10">
+            No {activeTab.toLowerCase()} to display.
+          </div>
+        )}
       </div>
     </div>
   );
