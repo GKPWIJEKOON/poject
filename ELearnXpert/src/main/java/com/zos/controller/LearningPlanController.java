@@ -132,15 +132,7 @@ public class LearningPlanController {
         Resource updatedResource = learningPlanService.updateResource(resourceId, resource, user.getId());
         return new ResponseEntity<>(updatedResource, HttpStatus.OK);
     }
-    @DeleteMapping("/resources/{resourceId}")
-    public ResponseEntity<MessageResponse> deleteResource(
-            @PathVariable Long resourceId,
-            @RequestHeader("Authorization") String token) throws UserException, ResourceException {
-
-        User user = userService.findUserProfile(token);
-        learningPlanService.deleteResource(resourceId, user.getId());
-        return new ResponseEntity<>(new MessageResponse("Resource deleted successfully"), HttpStatus.OK);
-    }
+   
 
     
 }
