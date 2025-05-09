@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   createLearningPlan, 
@@ -38,24 +38,10 @@ const LearningPlan = () => {
   const [error, setError] = useState(null);
   const [activePanelKey, setActivePanelKey] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [planModal, setPlanModal] = useState({
-    visible: false,
-    mode: 'create',
-    currentPlan: null
-  });
-  const [topicModal, setTopicModal] = useState({
-    visible: false,
-    mode: 'create',
-    currentTopic: null,
-    planId: null
-  });
-  const [resourceModal, setResourceModal] = useState({
-    visible: false,
-    mode: 'create',
-    currentResource: null,
-    topicId: null
-  });
-  const [searchQuery, setSearchQuery] = useState(''); // Search query state
+  const [planModal, setPlanModal] = useState({ visible: false, mode: 'create', currentPlan: null });
+  const [topicModal, setTopicModal] = useState({ visible: false, mode: 'create', currentTopic: null, planId: null });
+  const [resourceModal, setResourceModal] = useState({ visible: false, mode: 'create', currentResource: null, topicId: null });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -65,26 +51,19 @@ const LearningPlan = () => {
         await dispatch(getLearningPlans(token));
       } catch (err) {
         if (isMounted) setError("Failed to load learning plans. Please try again.");
-        console.error("Error:", err);
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
     if (token) fetchData();
-    
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [dispatch, token]);
 
   const handleCreatePlan = async (values) => {
     try {
-      await dispatch(createLearningPlan({
-        jwt: token,
-        planData: values
-      }));
-      setPlanModal({...planModal, visible: false});
+      await dispatch(createLearningPlan({ jwt: token, planData: values }));
+      setPlanModal({ ...planModal, visible: false });
       planForm.resetFields();
       message.success('Learning plan created successfully');
     } catch (err) {
@@ -94,12 +73,8 @@ const LearningPlan = () => {
 
   const handleUpdatePlan = async (values) => {
     try {
-      await dispatch(updateLearningPlan({
-        jwt: token,
-        planId: planModal.currentPlan.id,
-        planData: values
-      }));
-      setPlanModal({...planModal, visible: false});
+      await dispatch(updateLearningPlan({ jwt: token, planId: planModal.currentPlan.id, planData: values }));
+      setPlanModal({ ...planModal, visible: false });
       planForm.resetFields();
       message.success('Learning plan updated successfully');
     } catch (err) {
@@ -116,10 +91,7 @@ const LearningPlan = () => {
       cancelText: 'Cancel',
       async onOk() {
         try {
-          await dispatch(deleteLearningPlan({
-            jwt: token,
-            planId
-          }));
+          await dispatch(deleteLearningPlan({ jwt: token, planId }));
           message.success('Learning plan deleted successfully');
         } catch (err) {
           message.error(err.message || 'Failed to delete learning plan');
@@ -142,7 +114,7 @@ const LearningPlan = () => {
           targetCompletionDate: values.targetCompletionDate?.format('YYYY-MM-DD') || null
         }
       }));
-      setTopicModal({...topicModal, visible: false});
+      setTopicModal({ ...topicModal, visible: false });
       topicForm.resetFields();
       message.success('Topic added successfully');
     } catch (err) {
@@ -160,7 +132,7 @@ const LearningPlan = () => {
           targetCompletionDate: values.targetCompletionDate?.format('YYYY-MM-DD') || null
         }
       }));
-      setTopicModal({...topicModal, visible: false});
+      setTopicModal({ ...topicModal, visible: false });
       topicForm.resetFields();
       message.success('Topic updated successfully');
     } catch (err) {
@@ -177,10 +149,7 @@ const LearningPlan = () => {
       cancelText: 'Cancel',
       async onOk() {
         try {
-          await dispatch(deleteTopic({
-            jwt: token,
-            topicId
-          }));
+          await dispatch(deleteTopic({ jwt: token, topicId }));
           message.success('Topic deleted successfully');
         } catch (err) {
           message.error(err.message || 'Failed to delete topic');
@@ -196,7 +165,7 @@ const LearningPlan = () => {
         topicId: resourceModal.topicId,
         resourceData: values
       }));
-      setResourceModal({...resourceModal, visible: false});
+      setResourceModal({ ...resourceModal, visible: false });
       resourceForm.resetFields();
       message.success('Resource added successfully');
     } catch (err) {
@@ -211,7 +180,7 @@ const LearningPlan = () => {
         resourceId: resourceModal.currentResource.id,
         resourceData: values
       }));
-      setResourceModal({...resourceModal, visible: false});
+      setResourceModal({ ...resourceModal, visible: false });
       resourceForm.resetFields();
       message.success('Resource updated successfully');
     } catch (err) {
@@ -228,10 +197,7 @@ const LearningPlan = () => {
       cancelText: 'Cancel',
       async onOk() {
         try {
-          await dispatch(deleteResource({
-            jwt: token,
-            resourceId
-          }));
+          await dispatch(deleteResource({ jwt: token, resourceId }));
           message.success('Resource deleted successfully');
         } catch (err) {
           message.error(err.message || 'Failed to delete resource');
@@ -241,26 +207,14 @@ const LearningPlan = () => {
   };
 
   const showPlanModal = (mode = 'create', plan = null) => {
-    setPlanModal({
-      visible: true,
-      mode,
-      currentPlan: plan
-    });
+    setPlanModal({ visible: true, mode, currentPlan: plan });
     if (mode === 'edit') {
-      planForm.setFieldsValue({
-        title: plan.title,
-        description: plan.description
-      });
+      planForm.setFieldsValue({ title: plan.title, description: plan.description });
     }
   };
 
   const showTopicModal = (mode = 'create', topic = null, planId = null) => {
-    setTopicModal({
-      visible: true,
-      mode,
-      currentTopic: topic,
-      planId
-    });
+    setTopicModal({ visible: true, mode, currentTopic: topic, planId });
     if (mode === 'edit') {
       topicForm.setFieldsValue({
         title: topic.title,
@@ -272,12 +226,7 @@ const LearningPlan = () => {
   };
 
   const showResourceModal = (mode = 'create', resource = null, topicId = null) => {
-    setResourceModal({
-      visible: true,
-      mode,
-      currentResource: resource,
-      topicId
-    });
+    setResourceModal({ visible: true, mode, currentResource: resource, topicId });
     if (mode === 'edit') {
       resourceForm.setFieldsValue({
         url: resource.url,
@@ -299,28 +248,20 @@ const LearningPlan = () => {
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="text-center py-10">
-          <Alert message="Error" description={error} type="error" showIcon />
-          <Button 
-            type="primary" 
-            onClick={() => window.location.reload()}
-            className="mt-4"
-          >
-            Retry
-          </Button>
-        </div>
+      <div className="p-8 text-center">
+        <Alert message="Error" description={error} type="error" showIcon />
+        <Button type="primary" onClick={() => window.location.reload()} className="mt-4">
+          Retry
+        </Button>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="text-center py-10">
-          <Spin size="large" />
-          <p>Loading your learning plans...</p>
-        </div>
+      <div className="p-8 text-center">
+        <Spin size="large" />
+        <p>Loading your learning plans...</p>
       </div>
     );
   }
@@ -333,17 +274,14 @@ const LearningPlan = () => {
           New Plan
         </Button>
       </div>
-      
-      {/* Search bar to filter learning plans by title */}
-      <div className="mb-4">
-        <Input.Search
-          placeholder="Search by title"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          allowClear
-          style={{ maxWidth: 300 }}
-        />
-      </div>
+
+      <Input.Search
+        placeholder="Search by title"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        allowClear
+        style={{ maxWidth: 300, marginBottom: 16 }}
+      />
 
       {learningPlan.plans.length === 0 ? (
         <Alert message="No learning plans found." type="info" showIcon />
@@ -352,13 +290,10 @@ const LearningPlan = () => {
           activeKey={activePanelKey}
           onChange={handlePanelChange}
           accordion
-          className="learning-plan-collapse"
         >
           {learningPlan.plans
-            .filter((plan) =>
-              plan.title.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map((plan) => (
+            .filter(plan => plan.title.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map(plan => (
               <Panel
                 header={<span className="font-medium">{plan.title}</span>}
                 key={plan.id}
@@ -371,16 +306,10 @@ const LearningPlan = () => {
               >
                 <p className="mb-4 text-gray-600">{plan.description}</p>
                 <div className="flex justify-end mb-4">
-                  <Button icon={<BookOutlined />} onClick={() => showTopicModal('create', null, plan.id)}>
-                    Add Topic
-                  </Button>
+                  <Button icon={<BookOutlined />} onClick={() => showTopicModal('create', null, plan.id)}>Add Topic</Button>
                 </div>
-                {plan.topics.map((topic) => (
-                  <Card
-                    key={topic.id}
-                    title={topic.title}
-                    size="small"
-                    style={{ marginBottom: '16px' }}
+                {plan.topics.map(topic => (
+                  <Card key={topic.id} title={topic.title} size="small" style={{ marginBottom: '16px' }}
                     extra={
                       <Space>
                         <EditOutlined onClick={() => showTopicModal('edit', topic, plan.id)} />
@@ -389,150 +318,105 @@ const LearningPlan = () => {
                     }
                   >
                     <p>{topic.description}</p>
-                    <p>
-                      Status:{' '}
-                      <Tag color={topic.completed ? 'green' : 'orange'}>
-                        {topic.completed ? 'Completed' : 'Pending'}
-                      </Tag>
-                    </p>
-                    <p>
-                      Target Date:{' '}
-                      {topic.targetCompletionDate ? moment(topic.targetCompletionDate).format('LL') : 'N/A'}
-                    </p>
-
-                    <div className="flex justify-end mb-2">
-                      <Button
-                        icon={<FileAddOutlined />}
-                        onClick={() => showResourceModal('create', null, topic.id)}
-                        size="small"
-                      >
+                    <p>Status: <Tag color={topic.completed ? 'green' : 'orange'}>{topic.completed ? 'Completed' : 'Pending'}</Tag></p>
+                    <p>Target Date: {topic.targetCompletionDate ? moment(topic.targetCompletionDate).format('LL') : 'N/A'}</p>
+                    <div className="flex justify-end">
+                      <Button icon={<FileAddOutlined />} onClick={() => showResourceModal('create', null, topic.id)}>
                         Add Resource
                       </Button>
                     </div>
-
-                    <List
-                      dataSource={topic.resources || []}
-                      renderItem={(resource) => (
-                        <List.Item
-                          actions={[
-                            <a key="view" href={resource.url} target="_blank" rel="noreferrer">
-                              <LinkOutlined />
-                            </a>,
-                            <EditOutlined
-                              key="edit"
-                              onClick={() => showResourceModal('edit', resource, topic.id)}
-                            />,
-                            <DeleteOutlined
-                              key="delete"
-                              onClick={() => handleDeleteResource(resource.id)}
-                            />
-                          ]}
-                        >
-                          <List.Item.Meta
-                            title={<a href={resource.url} target="_blank" rel="noreferrer">{resource.url}</a>}
-                            description={resource.description}
-                          />
-                        </List.Item>
-                      )}
-                    />
+                    {topic.resources.map(resource => (
+                      <Card key={resource.id} title={resource.url} size="small" style={{ marginTop: '8px' }}
+                        extra={
+                          <Space>
+                            <EditOutlined onClick={() => showResourceModal('edit', resource, topic.id)} />
+                            <DeleteOutlined onClick={() => handleDeleteResource(resource.id)} />
+                          </Space>
+                        }
+                      >
+                        <p>{resource.description}</p>
+                      </Card>
+                    ))}
                   </Card>
                 ))}
               </Panel>
             ))}
         </Collapse>
       )}
-      
-      {/* Modal for Plan, Topic, and Resource - All remain unchanged */}
-      {/* Plan Modal */}
-      <Modal
-        title={planModal.mode === 'create' ? 'Create Learning Plan' : 'Edit Learning Plan'}
-        open={planModal.visible}
-        onCancel={() => setPlanModal({...planModal, visible: false})}
-        onOk={() => {
-          planForm
-            .validateFields()
-            .then((values) => {
-              if (planModal.mode === 'create') {
-                handleCreatePlan(values);
-              } else {
-                handleUpdatePlan(values);
-              }
-            })
-            .catch(() => {}); 
-        }}
-        okText={planModal.mode === 'create' ? 'Create' : 'Update'}
-      >
-        <Form form={planForm} layout="vertical">
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter title' }]}>
-            <Input placeholder="Enter plan title" />
+
+      {/* Modals below — with added description validation */}
+      <Modal visible={planModal.visible} title={planModal.mode === 'create' ? 'Create Plan' : 'Edit Plan'} onCancel={() => setPlanModal({ ...planModal, visible: false })} footer={null} centered>
+        <Form form={planForm} onFinish={planModal.mode === 'create' ? handleCreatePlan : handleUpdatePlan}>
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter the title of the plan' }]}>
+            <Input placeholder="Enter title" />
           </Form.Item>
-          <Form.Item name="description" label="Description">
-            <TextArea rows={4} placeholder="Enter plan description" />
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[
+              { required: true, message: 'Please enter a description' },
+              { min: 10, message: 'Description must be at least 10 characters' }
+            ]}
+          >
+            <TextArea placeholder="Enter description" rows={4} />
           </Form.Item>
+          <div className="text-center">
+            <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
+              {planModal.mode === 'create' ? 'Create Plan' : 'Update Plan'}
+            </Button>
+          </div>
         </Form>
       </Modal>
 
-      {/* Topic Modal */}
-      <Modal
-        title={topicModal.mode === 'create' ? 'Create Topic' : 'Edit Topic'}
-        open={topicModal.visible}
-        onCancel={() => setTopicModal({...topicModal, visible: false})}
-        onOk={() => {
-          topicForm
-            .validateFields()
-            .then((values) => {
-              if (topicModal.mode === 'create') {
-                handleCreateTopic(values);
-              } else {
-                handleUpdateTopic(values);
-              }
-            })
-            .catch(() => {});
-        }}
-        okText={topicModal.mode === 'create' ? 'Create' : 'Update'}
-      >
-        <Form form={topicForm} layout="vertical">
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter topic title' }]}>
+      <Modal visible={topicModal.visible} title={topicModal.mode === 'create' ? 'Create Topic' : 'Edit Topic'} onCancel={() => setTopicModal({ ...topicModal, visible: false })} footer={null} centered>
+        <Form form={topicForm} onFinish={topicModal.mode === 'create' ? handleCreateTopic : handleUpdateTopic}>
+          <Form.Item name="title" label="Topic Title" rules={[{ required: true, message: 'Please enter a topic title' }]}>
             <Input placeholder="Enter topic title" />
           </Form.Item>
-          <Form.Item name="description" label="Description">
-            <TextArea rows={4} placeholder="Enter topic description" />
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[
+              { required: true, message: 'Please enter topic description' },
+              { min: 10, message: 'Description must be at least 10 characters' }
+            ]}
+          >
+            <TextArea placeholder="Enter description" rows={4} />
+          </Form.Item>
+          <Form.Item name="completed" valuePropName="checked" label="Completed">
+            <Checkbox>Is this topic completed?</Checkbox>
           </Form.Item>
           <Form.Item name="targetCompletionDate" label="Target Completion Date">
-            <DatePicker
-              style={{ width: '100%' }}
-              format="YYYY-MM-DD"
-            />
+            <DatePicker format="YYYY-MM-DD" />
           </Form.Item>
+          <div className="text-center">
+            <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
+              {topicModal.mode === 'create' ? 'Create Topic' : 'Update Topic'}
+            </Button>
+          </div>
         </Form>
       </Modal>
-      
-      {/* Resource Modal */}
-      <Modal
-        title={resourceModal.mode === 'create' ? 'Add Resource' : 'Edit Resource'}
-        open={resourceModal.visible}
-        onCancel={() => setResourceModal({...resourceModal, visible: false})}
-        onOk={() => {
-          resourceForm
-            .validateFields()
-            .then((values) => {
-              if (resourceModal.mode === 'create') {
-                handleCreateResource(values);
-              } else {
-                handleUpdateResource(values);
-              }
-            })
-            .catch(() => {});
-        }}
-        okText={resourceModal.mode === 'create' ? 'Add' : 'Update'}
-      >
-        <Form form={resourceForm} layout="vertical">
-          <Form.Item name="url" label="URL" rules={[{ required: true, message: 'Please enter resource URL' }]}>
-            <Input placeholder="Enter resource URL" />
+
+      <Modal visible={resourceModal.visible} title={resourceModal.mode === 'create' ? 'Create Resource' : 'Edit Resource'} onCancel={() => setResourceModal({ ...resourceModal, visible: false })} footer={null} centered>
+        <Form form={resourceForm} onFinish={resourceModal.mode === 'create' ? handleCreateResource : handleUpdateResource}>
+          <Form.Item name="url" label="Resource URL" rules={[{ required: true, message: 'Please provide a URL for the resource' }]}>
+            <Input prefix={<LinkOutlined />} placeholder="Enter URL" />
           </Form.Item>
-          <Form.Item name="description" label="Description">
-            <TextArea rows={4} placeholder="Enter resource description" />
+          <Form.Item
+            name="description"
+            label="Resource Description"
+            rules={[
+              { required: true, message: 'Please provide a description of the resource' },
+              { min: 10, message: 'Description must be at least 10 characters' }
+            ]}
+          >
+            <TextArea rows={4} placeholder="Enter description" />
           </Form.Item>
+          <div className="text-center">
+            <Button type="primary" htmlType="submit" icon={<PlusOutlined />} loading={loading}>
+              {resourceModal.mode === 'create' ? 'Create Resource' : 'Update Resource'}
+            </Button>
+          </div>
         </Form>
       </Modal>
     </div>
