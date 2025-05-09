@@ -1,10 +1,9 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { IoReorderThreeOutline } from "react-icons/io5";
 import { useNavigate } from "react-router";
 import { mainu } from "./SidebarConfig";
 import "./Sidebar.css";
-import SearchComponent from "../SearchComponent/SearchComponent";
 import { useSelector } from "react-redux";
 import CreatePostModal from "../Post/Create/CreatePostModal";
 import CreateReelModal from "../Create/CreateReel";
@@ -12,8 +11,6 @@ import CreateReelModal from "../Create/CreateReel";
 const Sidebar = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Home");
-  const excludedBoxRef = useRef(null);
-  const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useSelector((store) => store);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -40,26 +37,15 @@ const Sidebar = () => {
       case "Notifications":
         navigate("/notifications");
         break;
-      case "Create Story":
-        navigate("/create-story");
-        break;
       case "Learning Plan":
         navigate("/learning_plan");
         break;
       case "Learning Progress":
         navigate("/learning-progress");
         break;
-      case "About Us":
-        navigate("/about");
-        break;
-      case "Search":
-        setIsSearchBoxVisible(true);
-        return;
       default:
         break;
     }
-
-    setIsSearchBoxVisible(false);
   };
 
   const handleClick = () => {
@@ -79,55 +65,41 @@ const Sidebar = () => {
     setIsCreateReelModalOpen(true);
   };
 
-  return (
-    <div className="sticky top-0 h-screen pb-10 flex bg-[#0A0F2C] text-white font-bold text-lg z-40">
-      <div
-        className={`$${isSearchBoxVisible ? "px-3" : "px-6"} flex flex-col justify-between h-full w-full`}
-      >
-        <div className="pt-6">
-          {!isSearchBoxVisible && (
-            <div className="flex justify-center mb-8">
-              <img
-                className="w-40 object-contain"
-                src="https://www.e-learning-platform.org/images/e-learning-logo.png"
-                alt="Logo"
-              />
-            </div>
-          )}
-          <div className="space-y-3">
-            {mainu.map((item) => (
-              <div
-                key={item.title}
-                onClick={() => handleTabClick(item.title)}
-                className={`flex items-center gap-3 cursor-pointer rounded-xl p-3 transition duration-200 ${
-                  activeTab === item.title
-                    ? "bg-blue-700 shadow-md"
-                    : "hover:bg-blue-800"
-                }`}
-              >
-                <div className="text-2xl">
-                  {activeTab === item.title ? item.activeIcon : item.icon}
-                </div>
-                {!isSearchBoxVisible && <p>{item.title}</p>}
-              </div>
-            ))}
-          </div>
-        </div>
+  // Filter out removed tabs
+  const filteredMenu = mainu.filter(
+    (item) => !["About Us", "Create Story", "Search"].includes(item.title)
+  );
 
-        <div className="relative mb-6">
+  return (
+    <>
+      <div className="fixed bottom-0 left-0 w-full bg-[#0A0F2C] text-white z-40 border-t border-gray-700 flex justify-between px-6 py-3">
+        {filteredMenu.map((item) => (
           <div
-            onClick={handleClick}
-            className="flex items-center cursor-pointer hover:bg-blue-800 p-3 rounded-xl"
+            key={item.title}
+            onClick={() => handleTabClick(item.title)}
+            className={`flex flex-col items-center text-base cursor-pointer px-3 ${
+              activeTab === item.title ? "text-blue-400" : "hover:text-blue-300"
+            }`}
           >
-            <IoReorderThreeOutline className="text-2xl" />
-            {!isSearchBoxVisible && <p className="ml-5">More</p>}
+            <div className="text-2xl">
+              {activeTab === item.title ? item.activeIcon : item.icon}
+            </div>
+            <span className="text-sm mt-1">{item.title}</span>
           </div>
+        ))}
+
+        <div
+          className="relative flex flex-col items-center text-base cursor-pointer px-3"
+          onClick={handleClick}
+        >
+          <IoReorderThreeOutline className="text-2xl" />
+          <span className="text-sm mt-1">More</span>
 
           {showDropdown && (
-            <div className="absolute bottom-16 left-0 w-40 bg-white text-black shadow-lg rounded-lg">
+            <div className="absolute bottom-10 w-36 bg-white text-black rounded shadow-md">
               <p
                 onClick={handleLogout}
-                className="w-full py-2 text-base px-4 border-b hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm border-b"
               >
                 Log out
               </p>
@@ -135,12 +107,6 @@ const Sidebar = () => {
           )}
         </div>
       </div>
-
-      {isSearchBoxVisible && (
-        <div className="w-full">
-          <SearchComponent setIsSearchVisible={setIsSearchBoxVisible} />
-        </div>
-      )}
 
       {/* Create Post Modal */}
       <CreatePostModal onClose={onClose} isOpen={isOpen} onOpen={onOpen} />
@@ -151,7 +117,7 @@ const Sidebar = () => {
         isOpen={isCreateReelModalOpen}
         onOpen={handleOpenCreateReelModal}
       />
-    </div>
+    </>
   );
 };
 
