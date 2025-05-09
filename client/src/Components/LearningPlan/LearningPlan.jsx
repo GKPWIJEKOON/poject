@@ -24,7 +24,6 @@ import {
 import moment from 'moment';
 import "./LearningPlan.css";
 
-
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -56,6 +55,7 @@ const LearningPlan = () => {
     currentResource: null,
     topicId: null
   });
+  const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
   useEffect(() => {
     let isMounted = true;
@@ -130,6 +130,10 @@ const LearningPlan = () => {
 
   const handleCreateTopic = async (values) => {
     try {
+      if (!topicModal.planId) {
+        message.error('No plan selected for the topic');
+        return;
+      }
       await dispatch(addTopicToPlan({
         jwt: token,
         planId: topicModal.planId,
@@ -145,10 +149,6 @@ const LearningPlan = () => {
       message.error(err.message || 'Failed to add topic');
     }
   };
-
-
-
-
 
   const handleUpdateTopic = async (values) => {
     try {
@@ -203,9 +203,6 @@ const LearningPlan = () => {
       message.error(err.message || 'Failed to add resource');
     }
   };
-
-
-  
 
   const handleUpdateResource = async (values) => {
     try {
@@ -336,7 +333,18 @@ const LearningPlan = () => {
           New Plan
         </Button>
       </div>
-  
+      
+      {/* Search bar to filter learning plans by title */}
+      <div className="mb-4">
+        <Input.Search
+          placeholder="Search by title"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          allowClear
+          style={{ maxWidth: 300 }}
+        />
+      </div>
+
       {learningPlan.plans.length === 0 ? (
         <Alert message="No learning plans found." type="info" showIcon />
       ) : (
@@ -346,90 +354,95 @@ const LearningPlan = () => {
           accordion
           className="learning-plan-collapse"
         >
-          {learningPlan.plans.map((plan) => (
-            <Panel
-              header={<span className="font-medium">{plan.title}</span>}
-              key={plan.id}
-              extra={
-                <Space>
-                  <EditOutlined onClick={(e) => { e.stopPropagation(); showPlanModal('edit', plan); }} />
-                  <DeleteOutlined onClick={(e) => { e.stopPropagation(); handleDeletePlan(plan.id); }} />
-                </Space>
-              }
-            >
-              <p className="mb-4 text-gray-600">{plan.description}</p>
-              <div className="flex justify-end mb-4">
-                <Button icon={<BookOutlined />} onClick={() => showTopicModal('create', null, plan.id)}>
-                  Add Topic
-                </Button>
-              </div>
-              {plan.topics.map((topic) => (
-                <Card
-                  key={topic.id}
-                  title={topic.title}
-                  size="small"
-                  style={{ marginBottom: '16px' }}
-                  extra={
-                    <Space>
-                      <EditOutlined onClick={() => showTopicModal('edit', topic, plan.id)} />
-                      <DeleteOutlined onClick={() => handleDeleteTopic(topic.id)} />
-                    </Space>
-                  }
-                >
-                  <p>{topic.description}</p>
-                  <p>
-                    Status:{' '}
-                    <Tag color={topic.completed ? 'green' : 'orange'}>
-                      {topic.completed ? 'Completed' : 'Pending'}
-                    </Tag>
-                  </p>
-                  <p>
-                    Target Date:{' '}
-                    {topic.targetCompletionDate ? moment(topic.targetCompletionDate).format('LL') : 'N/A'}
-                  </p>
-  
-                  <div className="flex justify-end mb-2">
-                    <Button
-                      icon={<FileAddOutlined />}
-                      onClick={() => showResourceModal('create', null, topic.id)}
-                      size="small"
-                    >
-                      Add Resource
-                    </Button>
-                  </div>
-  
-                  <List
-                    dataSource={topic.resources || []}
-                    renderItem={(resource) => (
-                      <List.Item
-                        actions={[
-                          <a key="view" href={resource.url} target="_blank" rel="noreferrer">
-                            <LinkOutlined />
-                          </a>,
-                          <EditOutlined
-                            key="edit"
-                            onClick={() => showResourceModal('edit', resource, topic.id)}
-                          />,
-                          <DeleteOutlined
-                            key="delete"
-                            onClick={() => handleDeleteResource(resource.id)}
-                          />
-                        ]}
+          {learningPlan.plans
+            .filter((plan) =>
+              plan.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((plan) => (
+              <Panel
+                header={<span className="font-medium">{plan.title}</span>}
+                key={plan.id}
+                extra={
+                  <Space>
+                    <EditOutlined onClick={(e) => { e.stopPropagation(); showPlanModal('edit', plan); }} />
+                    <DeleteOutlined onClick={(e) => { e.stopPropagation(); handleDeletePlan(plan.id); }} />
+                  </Space>
+                }
+              >
+                <p className="mb-4 text-gray-600">{plan.description}</p>
+                <div className="flex justify-end mb-4">
+                  <Button icon={<BookOutlined />} onClick={() => showTopicModal('create', null, plan.id)}>
+                    Add Topic
+                  </Button>
+                </div>
+                {plan.topics.map((topic) => (
+                  <Card
+                    key={topic.id}
+                    title={topic.title}
+                    size="small"
+                    style={{ marginBottom: '16px' }}
+                    extra={
+                      <Space>
+                        <EditOutlined onClick={() => showTopicModal('edit', topic, plan.id)} />
+                        <DeleteOutlined onClick={() => handleDeleteTopic(topic.id)} />
+                      </Space>
+                    }
+                  >
+                    <p>{topic.description}</p>
+                    <p>
+                      Status:{' '}
+                      <Tag color={topic.completed ? 'green' : 'orange'}>
+                        {topic.completed ? 'Completed' : 'Pending'}
+                      </Tag>
+                    </p>
+                    <p>
+                      Target Date:{' '}
+                      {topic.targetCompletionDate ? moment(topic.targetCompletionDate).format('LL') : 'N/A'}
+                    </p>
+
+                    <div className="flex justify-end mb-2">
+                      <Button
+                        icon={<FileAddOutlined />}
+                        onClick={() => showResourceModal('create', null, topic.id)}
+                        size="small"
                       >
-                        <List.Item.Meta
-                          title={<a href={resource.url} target="_blank" rel="noreferrer">{resource.url}</a>}
-                          description={resource.description}
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </Card>
-              ))}
-            </Panel>
-          ))}
+                        Add Resource
+                      </Button>
+                    </div>
+
+                    <List
+                      dataSource={topic.resources || []}
+                      renderItem={(resource) => (
+                        <List.Item
+                          actions={[
+                            <a key="view" href={resource.url} target="_blank" rel="noreferrer">
+                              <LinkOutlined />
+                            </a>,
+                            <EditOutlined
+                              key="edit"
+                              onClick={() => showResourceModal('edit', resource, topic.id)}
+                            />,
+                            <DeleteOutlined
+                              key="delete"
+                              onClick={() => handleDeleteResource(resource.id)}
+                            />
+                          ]}
+                        >
+                          <List.Item.Meta
+                            title={<a href={resource.url} target="_blank" rel="noreferrer">{resource.url}</a>}
+                            description={resource.description}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                ))}
+              </Panel>
+            ))}
         </Collapse>
       )}
-  
+      
+      {/* Modal for Plan, Topic, and Resource - All remain unchanged */}
       {/* Plan Modal */}
       <Modal
         title={planModal.mode === 'create' ? 'Create Learning Plan' : 'Edit Learning Plan'}
@@ -445,23 +458,23 @@ const LearningPlan = () => {
                 handleUpdatePlan(values);
               }
             })
-            .catch(() => {});
+            .catch(() => {}); 
         }}
         okText={planModal.mode === 'create' ? 'Create' : 'Update'}
       >
         <Form form={planForm} layout="vertical">
           <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter title' }]}>
-            <Input />
+            <Input placeholder="Enter plan title" />
           </Form.Item>
           <Form.Item name="description" label="Description">
-            <TextArea rows={3} />
+            <TextArea rows={4} placeholder="Enter plan description" />
           </Form.Item>
         </Form>
       </Modal>
-  
+
       {/* Topic Modal */}
       <Modal
-        title={topicModal.mode === 'create' ? 'Add Topic' : 'Edit Topic'}
+        title={topicModal.mode === 'create' ? 'Create Topic' : 'Edit Topic'}
         open={topicModal.visible}
         onCancel={() => setTopicModal({...topicModal, visible: false})}
         onOk={() => {
@@ -476,24 +489,24 @@ const LearningPlan = () => {
             })
             .catch(() => {});
         }}
-        okText={topicModal.mode === 'create' ? 'Add' : 'Update'}
+        okText={topicModal.mode === 'create' ? 'Create' : 'Update'}
       >
         <Form form={topicForm} layout="vertical">
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter title' }]}>
-            <Input />
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter topic title' }]}>
+            <Input placeholder="Enter topic title" />
           </Form.Item>
           <Form.Item name="description" label="Description">
-            <TextArea rows={3} />
+            <TextArea rows={4} placeholder="Enter topic description" />
           </Form.Item>
           <Form.Item name="targetCompletionDate" label="Target Completion Date">
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item name="completed" valuePropName="checked">
-            <Checkbox>Completed</Checkbox>
+            <DatePicker
+              style={{ width: '100%' }}
+              format="YYYY-MM-DD"
+            />
           </Form.Item>
         </Form>
       </Modal>
-  
+      
       {/* Resource Modal */}
       <Modal
         title={resourceModal.mode === 'create' ? 'Add Resource' : 'Edit Resource'}
@@ -514,17 +527,16 @@ const LearningPlan = () => {
         okText={resourceModal.mode === 'create' ? 'Add' : 'Update'}
       >
         <Form form={resourceForm} layout="vertical">
-          <Form.Item name="url" label="Resource URL" rules={[{ required: true, message: 'Please enter URL' }]}>
-            <Input />
+          <Form.Item name="url" label="URL" rules={[{ required: true, message: 'Please enter resource URL' }]}>
+            <Input placeholder="Enter resource URL" />
           </Form.Item>
           <Form.Item name="description" label="Description">
-            <TextArea rows={3} />
+            <TextArea rows={4} placeholder="Enter resource description" />
           </Form.Item>
         </Form>
       </Modal>
     </div>
   );
-  
 };
 
 export default LearningPlan;

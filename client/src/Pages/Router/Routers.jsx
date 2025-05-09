@@ -21,52 +21,99 @@ import OAuthSuccess from "../Auth/OAuthSuccess";
 
 
 
+// const Routers = () => {
+//   const location =useLocation();
+//   const reqUser = useSelector(store=>store.user.reqUser);
+//   const token=localStorage.getItem("token");
+//   const dispatch=useDispatch();
+
+//   useEffect(()=>{
+//     dispatch(getUserProfileAction(token));
+//  },[token])
+//   return (
+//     <div>
+//       {}
+
+// {(location.pathname !== "/login" && location.pathname !=="/signup")&& (
+//     <div className="flex">
+//         <Sidebar />
+//       </div>}
+//       <div className="w-full">
+//         <Routes>
+//           <Route path="/" element={<HomePage />} />
+//           <Route path="/about" element={<AboutUs />} />
+//           <Route path="/p/:postId" element={<HomePage />} />
+//           <Route path="/p/:postId/edit" element={<HomePage />} />
+//           <Route path="/:username" element={<Profile />} />
+//           <Route path="/demo" element={<StoryPage />} />
+//           <Route path="/story/:userId" element={<Story />} />
+//           <Route path="/account/edit" element={<EditProfilePage />} />
+//           <Route path="/reels" element={<ReelViewer />} />
+//           <Route path="/notifications" element={<Notification />} />
+//           <Route path="/create-story" element={<CreateStory />} />
+//           <Route path="/learning_plan" element={<LearningPlan />} />
+//           <Route path="/learning-progress" element={<LearningProgress />} />
+//           <Route path="/oauth-success" element={<OAuthSuccess />} />
+//         </Routes>
+//       </div>
+//     </div>
+//   )}
+//   {(location.pathname === "/login" || location.pathname==="/signup") && (
+//     <Routes>
+//       <Route path="/login" element={<Auth />} />
+//       <Route path="/signup" element={<Auth />} />
+//     </Routes>
+//   )}
+//     </div>
+    
+//   );
+// };
+
+
+
 const Routers = () => {
-  const location =useLocation();
-  const reqUser = useSelector(store=>store.user.reqUser);
-  const token=localStorage.getItem("token");
-  const dispatch=useDispatch();
+  const location = useLocation();
+  const reqUser = useSelector((store) => store.user.reqUser);
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getUserProfileAction(token));
- },[token])
-  return (
-    <div>
-      {}
+  }, [token]);
 
-{(location.pathname !== "/login" && location.pathname !=="/signup")&& (
-    <div className="flex">
-      {location.pathname!=="/reels" && <div className="sidebarBox border border-l-slate-500 w-[20%]">
-        <Sidebar />
-      </div>}
+  const isAuthRoute = location.pathname === "/login" || location.pathname === "/signup";
+
+  return (
+    <div className="fxlex">
+      {!isAuthRoute && <Sidebar />}
       <div className="w-full">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/p/:postId" element={<HomePage />} />
-          <Route path="/p/:postId/edit" element={<HomePage />} />
-          <Route path="/:username" element={<Profile />} />
-          <Route path="/demo" element={<StoryPage />} />
-          <Route path="/story/:userId" element={<Story />} />
-          <Route path="/account/edit" element={<EditProfilePage />} />
-          <Route path="/reels" element={<ReelViewer />} />
-          <Route path="/notifications" element={<Notification />} />
-          <Route path="/create-story" element={<CreateStory />} />
-          <Route path="/learning_plan" element={<LearningPlan />} />
-          <Route path="/learning-progress" element={<LearningProgress />} />
-          <Route path="/oauth-success" element={<OAuthSuccess />} />
+          {isAuthRoute ? (
+            <>
+              <Route path="/login" element={<Auth />} />
+              <Route path="/signup" element={<Auth />} />
+            </>
+          ) : (
+            <>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/p/:postId" element={<HomePage />} />
+              <Route path="/p/:postId/edit" element={<HomePage />} />
+              <Route path="/:username" element={<Profile />} />
+              <Route path="/demo" element={<StoryPage />} />
+              <Route path="/story/:userId" element={<Story />} />
+              <Route path="/account/edit" element={<EditProfilePage />} />
+              <Route path="/reels" element={<ReelViewer />} />
+              <Route path="/notifications" element={<Notification />} />
+              <Route path="/create-story" element={<CreateStory />} />
+              <Route path="/learning_plan" element={<LearningPlan />} />
+              <Route path="/learning-progress" element={<LearningProgress />} />
+              <Route path="/oauth-success" element={<OAuthSuccess />} />
+            </>
+          )}
         </Routes>
       </div>
     </div>
-  )}
-  {(location.pathname === "/login" || location.pathname==="/signup") && (
-    <Routes>
-      <Route path="/login" element={<Auth />} />
-      <Route path="/signup" element={<Auth />} />
-    </Routes>
-  )}
-    </div>
-    
   );
 };
 
