@@ -118,7 +118,7 @@ const HomePage = () => {
         {/* Main Feed */}
         <div className="w-full lg:w-[50%]">
           <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-blue-800">Welcome to Learning Pro</h2>
+            <h2 className="text-4xl font-bold text-blue-800">Welcome to E-LearnXpert</h2>
             <p className="text-2xl text-gray-600 mt-3">
               E-LearnXpert is your trusted partner on the path to knowledge and success.
             </p>

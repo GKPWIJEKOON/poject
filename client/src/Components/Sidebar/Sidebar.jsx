@@ -7,6 +7,7 @@ import "./Sidebar.css";
 import { useSelector } from "react-redux";
 import CreatePostModal from "../Post/Create/CreatePostModal";
 import CreateReelModal from "../Create/CreateReel";
+import SearchComponent from "../SearchComponent/SearchComponent";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Sidebar = () => {
   const { user } = useSelector((store) => store);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isCreateReelModalOpen, setIsCreateReelModalOpen] = useState(false);
+  const [isSearchBoxVisible, setIsSearchBoxVisible] = useState(false);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -43,6 +45,9 @@ const Sidebar = () => {
       case "Learning Progress":
         navigate("/learning-progress");
         break;
+      case "Search":
+        setIsSearchBoxVisible(true);
+        break;
       default:
         break;
     }
@@ -65,13 +70,14 @@ const Sidebar = () => {
     setIsCreateReelModalOpen(true);
   };
 
-  // Filter out removed tabs
+  // Include "Search" now
   const filteredMenu = mainu.filter(
-    (item) => !["About Us", "Create Story", "Search"].includes(item.title)
+    (item) => !["About Us", "Create Story"].includes(item.title)
   );
 
   return (
     <>
+      {/* Bottom Nav */}
       <div className="fixed bottom-0 left-0 w-full bg-[#0A0F2C] text-white z-40 border-t border-gray-700 flex justify-between px-6 py-3">
         {filteredMenu.map((item) => (
           <div
@@ -88,6 +94,7 @@ const Sidebar = () => {
           </div>
         ))}
 
+        {/* More Dropdown */}
         <div
           className="relative flex flex-col items-center text-base cursor-pointer px-3"
           onClick={handleClick}
@@ -117,6 +124,29 @@ const Sidebar = () => {
         isOpen={isCreateReelModalOpen}
         onOpen={handleOpenCreateReelModal}
       />
+
+      {/* Slide-in Search Sidebar */}
+      <div
+        className={`fixed top-0 right-0 h-full w-80 bg-white text-black shadow-lg z-50 transform transition-transform duration-300 ${
+          isSearchBoxVisible ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-semibold">Search</h2>
+          <button
+            onClick={() => {
+              setIsSearchBoxVisible(false);
+              setActiveTab("Home");
+            }}
+            className="text-gray-600 hover:text-black"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="p-4 overflow-y-auto h-full">
+          <SearchComponent setIsSearchVisible={setIsSearchBoxVisible} />
+        </div>
+      </div>
     </>
   );
 };
