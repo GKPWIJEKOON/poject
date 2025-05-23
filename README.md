@@ -8,8 +8,8 @@ This repository contains the source code for a  E_Learning & Shareing Social Pla
 ## Project Structure
 
 The project structure is organized as follows:
-- <b>frontend:</b> React application.
-- <b>backend:</b>  Spring Boot + JPA (Java Persistence API) for efficient and scalable server-side logic<br>
+- <b>Frontend:</b> React application.
+- <b>Backend:</b>  Spring Boot + JPA (Java Persistence API) for efficient and scalable server-side logic<br>
 - <b>𝗔𝗿𝗰𝗵𝗶𝘁𝗲𝗰𝘁𝘂𝗿𝗲: </b> Layered Architecture to ensure maintainability, scalability, and clean code structure<br>
 - <b>𝗗𝗮𝘁𝗮𝗯𝗮𝘀𝗲: </b>  MySQL + Hibernate (ORM) for optimal data management<br><br>
 
